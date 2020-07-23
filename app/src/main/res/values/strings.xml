@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Sensor Setup Program</string>
+    <string name="txt_allreports">All Reports</string>
+    <string name="txt_pause">Pause Posting</string>
+    <string name="txt_resume">Resume Posting</string>
+    <string name="txt_update">Update</string>
+    <string name="txt_shutdown">Shutdown</string>
+    <string name="txt_clear">Clear</string>
+    <string name="txt_network_settings">Network Settings</string>
+    <string name="txt_ssid">SSID</string>
+    <string name="txt_password">Pass</string>
+    <string name="txt_send">Send</string>
+    <string name="ssid_message">Please enter network SSID</string>
+    <string name="pass_message">Please enter network Password</string>
+    <string name="sensors">Sensor #</string>
+    <string name="value">Value</string>
+</resources>
