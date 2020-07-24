@@ -2,9 +2,10 @@ package com.discoveritech.sensorsetupprogram.Activities;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.text.style.LineHeightSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -25,11 +26,12 @@ import com.macasaet.fernet.Validator;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
-;import org.json.JSONArray;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
 
@@ -48,6 +50,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         init();
+
     }
 
     public void init() {
@@ -86,52 +89,33 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         root.addChildren(child0, child1, child2);
         AndroidTreeView tView = new AndroidTreeView(DashboardActivity.this, root);
         v.addView(tView.getView());
-//      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//
-//       StrictMode.setThreadPolicy(policy);
-        //   udpBroadcast.receiveBroadcst();
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                udpBroadcast.receiveBroadcst();
-//            }
-//        });
     }
 
     @Override
     public void onClick(View v) {
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
         switch (v.getId()) {
             case R.id.btn_allReports:
-                try {
-                    jsonObject.put("command", "Report");
-                    jsonObject.put("params", jsonArray);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                jsonArray.put("['All'], " + jsonObject);
-                udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Report', 'params': []}]"), DashboardActivity.this);
+                udpBroadcast.sendBroadcast(encryptContent(createCommand("Report")), DashboardActivity.this);
                 break;
             case R.id.btn_resume:
-                udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Resume_Posting', 'params': []}]"), DashboardActivity.this);
+
+                udpBroadcast.sendBroadcast(encryptContent(createCommand("Resume_Posting")), DashboardActivity.this);
                 break;
             case R.id.btn_pause:
-                udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Pause_Posting', 'params': []}] "), DashboardActivity.this);
+                udpBroadcast.sendBroadcast(encryptContent(createCommand("Pause_Posting")), DashboardActivity.this);
                 break;
             case R.id.btn_update:
-                udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Update_Check', 'params': []}] "), DashboardActivity.this);
+                udpBroadcast.sendBroadcast(encryptContent(createCommand("Update_Check")), DashboardActivity.this);
                 break;
             case R.id.btn_shutdown:
-                udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Shutdown', 'params': []}]"), DashboardActivity.this);
+                udpBroadcast.sendBroadcast(encryptContent(createCommand("Shutdown")), DashboardActivity.this);
                 break;
             case R.id.btn_clear:
                 Toast.makeText(DashboardActivity.this, "Will be handle later", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_send:
                 if (validate()) {
-                    udpBroadcast.sendBroadcast(encryptContent("[['All'], {'command': 'Set_Network', 'params': ['" + txt_ssid + "', '" + txt_pass + "']}"), DashboardActivity.this);
+                    udpBroadcast.sendBroadcast(encryptContent("[[\"All\"], {\"command\": 'Set_Network\", \"params\": [\"" + txt_ssid + "\", \"" + txt_pass + "\"]}"), DashboardActivity.this);
                 }
                 break;
         }
@@ -162,16 +146,25 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         };
         String payload = token.validateAndDecrypt(key, validator);
-        byte[] encodedBytes = key.encrypt(token.toString().getBytes(),token.getInitializationVector());
-
-//        String aString = new String(decodedBytesArray);
-//
-//       final Token newtoken = Token.fromString("gAAAAABfGGfaWnOrPF32a1aNVXUzFqdX-z0sDm8mexUdffIbHKJZOysHU19T__R5cWc_voMGxecxEXnXv6Rp_A3mtK3xAO9uiT5e32y_ahe9CaSWFFNYM1A=");
-////
-////        Log.d("Decrypted Token", "" + newtoken);
-//       newtoken.validateAndDecrypt(key, validator);
-//      Log.d("DecryptedCommand", "" +  newtoken.validateAndDecrypt(key, validator));
+        byte[] encodedBytes = key.encrypt(token.toString().getBytes(), token.getInitializationVector());
 
         return token.serialise().getBytes();
+    }
+
+    public String createCommand(String Command) {
+        String all_value = "[\"All\"]";
+        JSONArray jsonArray = new JSONArray();
+        String value = "";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("command", Command);
+            jsonObject.put("params", jsonArray);
+            jsonArray.put(all_value + ", " + jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        value = jsonArray.toString().replaceAll("\\\\", "");
+        Log.d("MyObject", "" + value);
+        return value;
     }
 }
