@@ -14,4 +14,17 @@
     <string name="pass_message">Please enter network Password</string>
     <string name="sensors">Sensor #</string>
     <string name="value">Value</string>
+    <string name="add">Add</string>
+    <string name="product_hint">Products</string>
+    <string name="department_store">Department Store</string>
+
+    <string-array name="dept_array">
+        <item>Apparel</item>
+        <item>Beauty</item>
+        <item>Electronics</item>
+        <item>Grocery</item>
+        <item>Home Improvement</item>
+        <item>Jewelry</item>
+        <item>Pharmacy</item>
+    </string-array>
 </resources>

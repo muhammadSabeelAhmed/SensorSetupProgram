@@ -4,6 +4,7 @@ import com.macasaet.fernet.Token;
 
 public class Constants {
     public static int PORT = 5000;
+    public static String OPERATION="";
     private Token token;
 
     public Token getToken() {

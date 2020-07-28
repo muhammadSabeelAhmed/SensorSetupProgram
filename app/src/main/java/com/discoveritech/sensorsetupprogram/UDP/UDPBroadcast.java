@@ -3,20 +3,32 @@ package com.discoveritech.sensorsetupprogram.UDP;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
+import android.os.Build;
+import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+
+import com.discoveritech.sensorsetupprogram.Activities.DashboardActivity;
 import com.discoveritech.sensorsetupprogram.GeneralClasses.Constants;
+import com.discoveritech.sensorsetupprogram.GeneralClasses.Global;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.util.ArrayList;
+
+import static com.discoveritech.sensorsetupprogram.Activities.DashboardActivity.handler;
 
 public class UDPBroadcast {
+    public String[] udp_received = new String[4];
+
     public void sendBroadcast(byte[] sendData, Context mContext) {
         // Hack Prevent crash (sending should be done using an async task)
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -26,9 +38,9 @@ public class UDPBroadcast {
             //Open a random port to send the package
             DatagramSocket socket = new DatagramSocket();
             socket.setBroadcast(true);
-        //  byte[] sendData = (messageStr.getBytes(StandardCharsets.US_ASCII));
-          //  Base64.getEncoder().encode(token.serialise().getBytes(StandardCharsets.US_ASCII)
-            Log.d("SendingBoradcast", "True: " +sendData.length);
+            //  byte[] sendData = (messageStr.getBytes(StandardCharsets.US_ASCII));
+            //  Base64.getEncoder().encode(token.serialise().getBytes(StandardCharsets.US_ASCII)
+            Log.d("SendingBoradcast", "True: " + sendData.length);
 
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, getBroadcastAddress(mContext), Constants.PORT);
             socket.send(sendPacket);
@@ -41,7 +53,7 @@ public class UDPBroadcast {
     public void receiveBroadcst() {
         try {
             //Keep a socket open to listen to all the UDP trafic that is destined for this port
-            DatagramSocket socket = new DatagramSocket(Constants.PORT, InetAddress.getByName("0.0.0.0"));
+            DatagramSocket socket = new DatagramSocket(5001, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
             while (true) {
@@ -52,10 +64,30 @@ public class UDPBroadcast {
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 socket.receive(packet);
 
-                //Packet received
-                Log.d("ReceivingBoradcast", "Packet received from: " + packet.getAddress().getHostAddress() + "--Name:" + packet.getAddress().getCanonicalHostName());
                 String data = new String(packet.getData()).trim();
-                Log.d("ReceivingBoradcast", "Packet received; data: " + data);
+                //  {"serial": "res-sm-000158", "measurement": [1595865179, 1, 76, "Luftballon", 0, ""]}
+
+                try {
+                    JSONObject jsonObject = new JSONObject(data);
+
+                    JSONArray jsonArray = jsonObject.getJSONArray("measurement");
+                    Log.d("ReceivingBoradcast", "measurement" + jsonArray.toString());
+
+                    Message sensor = Message.obtain();
+                    sensor.obj = "start_updating";
+
+                    udp_received[0] = jsonObject.get("serial").toString();
+                    if (jsonArray.length() > 0) {
+                        udp_received[1] = jsonArray.get(1).toString();
+                        udp_received[2] = jsonArray.get(2).toString() + " " + jsonArray.get(3).toString() + "-" + jsonArray.get(5).toString();
+                        udp_received[3]= packet.getAddress().getHostAddress();
+                         DashboardActivity.myarr=udp_received;
+                        //   DashboardActivity.addProduct(jsonObject.get("serial").toString(), jsonArray.get(1).toString(), jsonArray.get(2).toString() + " " + jsonArray.get(3).toString() + "-" + jsonArray.get(5).toString());
+                        handler.sendMessage(sensor);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException ex) {
             Log.i("ReceivingBoradcast", "Oops" + ex.getMessage());
