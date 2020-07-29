@@ -57,11 +57,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public static Handler handler;
     Handler myhandler;
     Runnable myRunnable;
-
+    Global global;
     private static LinkedHashMap<String, HeaderInfo> myDepartments = new LinkedHashMap<String, HeaderInfo>();
     private static ArrayList<HeaderInfo> deptList = new ArrayList<HeaderInfo>();
-
     private MyListAdapter listAdapter;
+
     private ExpandableListView myList;
 
     @Override
@@ -104,6 +104,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void init() {
+        global = new Global();
         v = findViewById(R.id.view);
         btn_all = (Button) findViewById(R.id.btn_allReports);
         btn_all.setOnClickListener(this);
@@ -184,12 +185,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
                 break;
             case R.id.btn_clear:
-                Toast.makeText(DashboardActivity.this, "Will be handle later", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(DashboardActivity.this, "Will be handle later", Toast.LENGTH_SHORT).show();
+                myDepartments.clear();
+                deptList.clear();
+                listAdapter.notifyDataSetChanged();
 
                 break;
             case R.id.btn_send:
                 if (validate()) {
-                    udpBroadcast.sendBroadcast(encryptContent("[[\"All\"], {\"command\": 'Set_Network\", \"params\": [\"" + txt_ssid + "\", \"" + txt_pass + "\"]}"), DashboardActivity.this);
+                    udpBroadcast.sendBroadcast(encryptContent(createCommand("Set_Network", txt_ssid, txt_pass)), DashboardActivity.this);
                 }
                 break;
             case R.id.add:
@@ -249,6 +253,28 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         return value;
     }
 
+
+    public String createCommand(String command, String SSID, String Password) {
+        String all_value = "[\"All\"]";
+        String[] jsonArray = new String[1];
+        String value = "";
+        try {
+            JSONArray myJsonArray = new JSONArray();
+            myJsonArray.put(SSID);
+            myJsonArray.put(Password);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("command", command);
+            jsonObject.put("params", myJsonArray);
+            jsonArray[0] = "[" + all_value + ", " + jsonObject.toString() + "]";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        value = jsonArray[0].replaceAll("\\\\", "");
+        Log.d("MyObject", "" + value);
+        return value;
+    }
+
+
     public byte[] encryptContent(String Command) {
         final Key key = new Key("3t55GSk5qDRUif_v4MNQGLrkzaWv-TFOSJpqQWj9KKg=");
         final Token token = Token.generate(key, Command);
@@ -294,8 +320,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             //get the child info
             DetailInfo detailInfo = headerInfo.getProductList().get(childPosition);
             //display it or do something with it
-            Toast.makeText(getBaseContext(), "Clicked on Detail " + headerInfo.getName()
-                    + "/" + detailInfo.getName(), Toast.LENGTH_LONG).show();
+            //  Toast.makeText(getBaseContext(), "" + headerInfo.getName() + "/" + detailInfo.getName(), Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -310,8 +335,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             //get the group header
             HeaderInfo headerInfo = deptList.get(groupPosition);
             //display it or do something with it
-            Toast.makeText(getBaseContext(), "Child on Header " + headerInfo.getName(),
-                    Toast.LENGTH_LONG).show();
+            //     Toast.makeText(getBaseContext(), "" + headerInfo.getName(), Toast.LENGTH_LONG).show();
 
             return false;
         }
@@ -369,7 +393,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         detailInfo.setName(product);
         productList.add(detailInfo);
 
-
         int count = productList.size();
         for (int i = 0; i < count; i++) {
             for (int j = i + 1; j < count; j++) {
@@ -380,8 +403,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-        headerInfo.setProductList(productList);
+        Collections.sort(productList.subList(1, productList.size() - 1), new Comparator<DetailInfo>() {
+            @Override
+            public int compare(DetailInfo o1, DetailInfo o2) {
+                int val1 = Integer.parseInt(o1.getSequence());
+                int val2 = Integer.parseInt(o2.getSequence());
+                return val1 - val2;
+            }
+        });
 
+        headerInfo.setProductList(productList);
         //find the group position inside the list
         groupPosition = deptList.indexOf(headerInfo);
         return groupPosition;
@@ -411,4 +442,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         return simpleFormatter.format(date);
     }
 
+    @Override
+    public void onBackPressed() {
+        global.changeActivity(DashboardActivity.this, new SplashActivity());
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        finish();
+    }
 }

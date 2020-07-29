@@ -19,30 +19,39 @@
             style="@style/Widget.AppCompat.Button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_allreports"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btn_pause"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_pause"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btn_resume"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_resume"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
     </LinearLayout>
 
@@ -59,30 +68,39 @@
             style="@style/Widget.AppCompat.Button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_update"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btn_shutdown"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_shutdown"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btn_clear"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
+            android:background="@drawable/button_click"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/txt_clear"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="13dp" />
     </LinearLayout>
 
@@ -174,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/product"
                 android:layout_alignParentLeft="true"
-                android:layout_margin="5dp"
+                android:layout_margin="3dp"
                 android:padding="5dp"
                 android:text="@string/department_store"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -215,6 +233,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:weightSum="4">
 
@@ -222,26 +241,36 @@
                 android:id="@+id/network_ssd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.6"
+                android:layout_weight="1.5"
+                android:background="@drawable/background"
                 android:fontFamily="sans-serif-light"
                 android:hint="@string/txt_ssid"
+                android:paddingLeft="5dp"
+                android:singleLine="true"
                 android:textSize="15dp" />
 
             <EditText
                 android:id="@+id/network_pass"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.6"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/background"
                 android:fontFamily="sans-serif-light"
                 android:hint="@string/txt_password"
+                android:paddingLeft="5dp"
+                android:singleLine="true"
                 android:textSize="15dp" />
 
             <Button
                 android:id="@+id/btn_send"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
-                android:text="@string/txt_send" />
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_click"
+                android:text="@string/txt_send"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 
