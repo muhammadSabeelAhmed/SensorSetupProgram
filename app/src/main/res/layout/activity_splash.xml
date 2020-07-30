@@ -9,13 +9,30 @@
     tools:context=".Activities.SplashActivity">
 
     <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/light_blue"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Port Settings"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/menu"
         android:gravity="center"
         android:orientation="vertical">
 
         <EditText
-            android:inputType="number"
             android:id="@+id/txt_receving_port"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -25,7 +42,9 @@
             android:background="@drawable/background"
             android:gravity="center"
             android:hint="Receiving Port #"
+            android:inputType="number"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:textSize="18dp" />
 
 
@@ -33,13 +52,13 @@
             android:id="@+id/txt_sending_port"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:inputType="number"
             android:layout_marginLeft="70dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="70dp"
             android:background="@drawable/background"
             android:gravity="center"
             android:hint="Sending Port #"
+            android:inputType="number"
             android:textSize="18dp" />
 
         <Button
@@ -48,12 +67,12 @@
             android:layout_height="45dp"
             android:layout_marginLeft="70dp"
             android:layout_marginTop="30dp"
-            android:textAllCaps="false"
             android:layout_marginRight="70dp"
             android:background="@drawable/button_click"
             android:text="Proceed"
-            android:textSize="18dp"
-            android:textColor="@color/white" />
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
     </LinearLayout>
 
 </RelativeLayout>

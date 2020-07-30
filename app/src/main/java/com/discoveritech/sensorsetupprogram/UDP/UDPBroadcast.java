@@ -4,12 +4,10 @@ import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Message;
-import android.os.StrictMode;
 import android.util.Log;
 
 import com.discoveritech.sensorsetupprogram.Activities.DashboardActivity;
 import com.discoveritech.sensorsetupprogram.GeneralClasses.Constants;
-import com.discoveritech.sensorsetupprogram.GeneralClasses.Global;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,15 +25,13 @@ public class UDPBroadcast {
 
     public void sendBroadcast(byte[] sendData, Context mContext) {
         // Hack Prevent crash (sending should be done using an async task)
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+     //   StrictMode.setThreadPolicy(policy);
 
         try {
             //Open a random port to send the package
             DatagramSocket socket = new DatagramSocket();
             socket.setBroadcast(true);
-            //  byte[] sendData = (messageStr.getBytes(StandardCharsets.US_ASCII));
-            //  Base64.getEncoder().encode(token.serialise().getBytes(StandardCharsets.US_ASCII)
             Log.d("SendingBoradcast", "True: " + sendData.length);
 
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, getBroadcastAddress(mContext), Constants.SENDING_PORT);
