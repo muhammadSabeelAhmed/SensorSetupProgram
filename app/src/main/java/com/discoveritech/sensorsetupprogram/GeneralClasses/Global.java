@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Global {
+    public static ArrayList<String> myPorts = new ArrayList<>();
+
     public static void removeDuplicates(List<?> list) {
         int count = list.size();
 
