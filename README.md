@@ -1,4 +1,4 @@
-# SensorSetupProgram
+# Sensor Setup Program
 Android Application to send and receive packets of UDP Broadcast
 
 
