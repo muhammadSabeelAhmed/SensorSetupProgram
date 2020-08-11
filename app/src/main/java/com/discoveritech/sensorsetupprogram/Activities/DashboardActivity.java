@@ -444,9 +444,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        global.changeActivity(DashboardActivity.this, new SplashActivity());
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        finish();
+//        global.changeActivity(DashboardActivity.this, new SplashActivity());
+//        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+//        finish();
+        super.onBackPressed();
     }
 
     public static <K extends Comparable, V> Map<K, V> sortByKeys(Map<K, V> map) {
